@@ -26,9 +26,7 @@ demuxer.onMediaInfo = () => {
 
 }
 
-
 remuxer.bindDataSource(demuxer);
-
 
 remuxer.onInitSegment = (type, mediaSegment) => {
     fs.writeFileSync(outputFilePath, Buffer.from(mediaSegment.data), {flag: 'a'})
@@ -38,6 +36,5 @@ remuxer.onMediaSegment = (type, mediaSegment) => {
     fs.writeFileSync(outputFilePath, Buffer.from(mediaSegment.data), {flag: 'a'})
 
 }
-
 
 demuxer.parseChunks(arrayBuffer, 0);
