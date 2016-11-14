@@ -110,10 +110,19 @@ class MP4Remuxer {
 
         if (type === 'audio') {
             this._audioMeta = metadata;
-            metabox = MP4.generateInitSegment(metadata);
+            if(this._videoMeta) {
+                metabox = MP4.generateInitSegment(this._videoMeta, this._audioMeta);
+            }else {
+                return;
+            }
+
         } else if (type === 'video') {
             this._videoMeta = metadata;
-            metabox = MP4.generateInitSegment(metadata);
+            if(this._audioMeta) {
+                metabox = MP4.generateInitSegment(this._videoMeta, this._audioMeta);
+            }else {
+                return;
+            }
         } else {
             return;
         }
@@ -122,12 +131,7 @@ class MP4Remuxer {
         if (!this._onInitSegment) {
             throw new IllegalStateException('MP4Remuxer: onInitSegment callback must be specified!');
         }
-        this._onInitSegment(type, {
-            type: type,
-            data: metabox.buffer,
-            codec: metadata.codec,
-            container: `${type}/mp4`
-        });
+        this._onInitSegment(metabox.buffer);
     }
 
     _calculateDtsBase(audioTrack, videoTrack) {

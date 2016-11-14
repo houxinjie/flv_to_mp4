@@ -131,9 +131,9 @@ class MP4 {
     }
 
     // emit ftyp & moov
-    static generateInitSegment(meta) {
+    static generateInitSegment(videoMeta, audioMeta) {
         let ftyp = MP4.box(MP4.types.ftyp, MP4.constants.FTYP);
-        let moov = MP4.moov(meta);
+        let moov = MP4.moov(videoMeta, audioMeta);
 
         let result = new Uint8Array(ftyp.byteLength + moov.byteLength);
         result.set(ftyp, 0);
@@ -142,11 +142,13 @@ class MP4 {
     }
 
     // Movie metadata box
-    static moov(meta) {
-        let mvhd = MP4.mvhd(meta.timescale, meta.duration);
-        let trak = MP4.trak(meta);
-        let mvex = MP4.mvex(meta);
-        return MP4.box(MP4.types.moov, mvhd, trak, mvex);
+    static moov(videoMeta, audioMeta) {
+        let mvhd = MP4.mvhd(videoMeta.timescale, videoMeta.duration);
+        let videoTrak = MP4.trak(videoMeta);
+        let videoMvex = MP4.mvex(videoMeta);
+        let audioTrak = MP4.trak(audioMeta);
+        let audioMvex = MP4.mvex(audioMeta);
+        return MP4.box(MP4.types.moov, mvhd, videoTrak, videoMvex, audioTrak, audioMvex);
     }
 
     // Movie header box
@@ -182,7 +184,7 @@ class MP4 {
             0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00,  // ----end pre_defined 6 * 4 bytes----
-            0xFF, 0xFF, 0xFF, 0xFF   // next_track_ID
+            0x00, 0x00, 0x00, 0x03   // next_track_ID
         ]));
     }
 
