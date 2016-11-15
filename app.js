@@ -5,7 +5,7 @@ import MP4Remuxer from './remux/mp4-remuxer.js';
 
 
 const inputFilePath = path.join(__dirname, 'data/test.flv');
-const outputFilePath = path.join(__dirname, 'data/output.mp4');
+const outputFilePath = path.join(__dirname, 'data/output_.mp4');
 
 if(fs.existsSync(outputFilePath)){
     fs.unlinkSync(outputFilePath);
@@ -31,9 +31,7 @@ remuxer.onInitSegment = data => {
 }
 
 remuxer.onMediaSegment = (type, mediaSegment) => {
-    //if(type === 'video'){
-        fs.writeFileSync(outputFilePath, Buffer.from(mediaSegment.data), {flag: 'a'})
-    //}
+    fs.writeFileSync(outputFilePath, Buffer.from(mediaSegment.data), {flag: 'a'})
 }
 
 demuxer.parseChunks(arrayBuffer, 0);

@@ -306,7 +306,7 @@ class MP4Remuxer {
         }
 
         track.samples = mp4Samples;
-        track.sequenceNumber++;
+        track.sequenceNumber = ++MP4Remuxer.sequenceNumber;
 
         let moofbox = MP4.moof(track, firstDts);
         track.samples = [];
@@ -484,7 +484,7 @@ class MP4Remuxer {
         }
 
         track.samples = mp4Samples;
-        track.sequenceNumber++;
+        track.sequenceNumber = ++MP4Remuxer.sequenceNumber;
 
         // workaround for chrome < 50: force first sample as a random access point
         // see https://bugs.chromium.org/p/chromium/issues/detail?id=229412
@@ -514,5 +514,7 @@ class MP4Remuxer {
     }
 
 }
+
+MP4Remuxer.sequenceNumber = 0;
 
 export default MP4Remuxer;

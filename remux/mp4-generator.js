@@ -11,7 +11,7 @@ class MP4 {
             stco: [], stsc: [], stsd: [], stsz: [],
             stts: [], tfdt: [], tfhd: [], traf: [],
             trak: [], trun: [], trex: [], tkhd: [],
-            vmhd: [], smhd: []
+            vmhd: [], smhd: [], mehd: [],
         };
 
         for (let name in MP4.types) {
@@ -145,10 +145,9 @@ class MP4 {
     static moov(videoMeta, audioMeta) {
         let mvhd = MP4.mvhd(videoMeta.timescale, videoMeta.duration);
         let videoTrak = MP4.trak(videoMeta);
-        let videoMvex = MP4.mvex(videoMeta);
         let audioTrak = MP4.trak(audioMeta);
-        let audioMvex = MP4.mvex(audioMeta);
-        return MP4.box(MP4.types.moov, mvhd, videoTrak, videoMvex, audioTrak, audioMvex);
+        let mvex = MP4.mvex(videoMeta, audioMeta);
+        return MP4.box(MP4.types.moov, mvhd, videoTrak, audioTrak, mvex);
     }
 
     // Movie header box
@@ -395,8 +394,20 @@ class MP4 {
     }
 
     // Movie Extends box
-    static mvex(meta) {
-        return MP4.box(MP4.types.mvex, MP4.trex(meta));
+    static mvex(videoMeta, audioMeta) {
+        return MP4.box(MP4.types.mvex, MP4.mehd(videoMeta.duration), MP4.trex(videoMeta), MP4.trex(audioMeta));
+    }
+
+
+    static mehd(duration) {
+        let data = new Uint8Array([
+            0x00, 0x00, 0x00, 0x00, // version(0) + flags
+            (duration >>> 24) & 0xFF,   // duration: 4 bytes
+            (duration >>> 16) & 0xFF,
+            (duration >>>  8) & 0xFF,
+            (duration) & 0xFF,
+        ]);
+        return MP4.box(MP4.types.mehd, data);
     }
 
     // Track Extends box
@@ -411,7 +422,7 @@ class MP4 {
             0x00, 0x00, 0x00, 0x01,  // default_sample_description_index
             0x00, 0x00, 0x00, 0x00,  // default_sample_duration
             0x00, 0x00, 0x00, 0x00,  // default_sample_size
-            0x00, 0x01, 0x00, 0x01   // default_sample_flags
+            0x00, 0x00, 0x00, 0x00   // default_sample_flags
         ]);
         return MP4.box(MP4.types.trex, data);
     }
