@@ -558,21 +558,15 @@ class FLVDemuxer {
         }
 
 
-            // for other browsers, e.g. chrome...
-            // Always use HE-AAC to make it easier to switch aac codec profile
-        audioObjectType = 5;
-        extensionSamplingIndex = samplingIndex;
-        config = new Array(4);
-
         if (samplingIndex >= 6) {
+            audioObjectType = 5;
+            config = new Array(4);
             extensionSamplingIndex = samplingIndex - 3;
-        } else if (channelConfig === 1) {  // Mono channel
+        } else {  // use LC-AAC
             audioObjectType = 2;
             config = new Array(2);
             extensionSamplingIndex = samplingIndex;
         }
-
-
         config[0]  = audioObjectType << 3;
         config[0] |= (samplingIndex & 0x0F) >>> 1;
         config[1]  = (samplingIndex & 0x0F) << 7;
