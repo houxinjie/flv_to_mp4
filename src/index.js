@@ -4,7 +4,7 @@ import FLVDemuxer from './demux/flv-demuxer.js';
 import MP4Remuxer from './remux/mp4-remuxer.js';
 import Log from './utils/logger.js';
 import commander from 'commander';
-import {version} from './package.json';
+import {version} from '../package.json';
 
 
 commander

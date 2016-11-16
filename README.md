@@ -21,3 +21,11 @@ Example:
 ``` bash
 $ ftom4 -i data/test.flv -o data/test.mp4
 ```
+
+### Build
+
+``` bash
+$ git clone https://github.com/houxinjie/flv_to_mp4
+$ cd flv_to_mp4
+$ npm install && npm run build
+```
