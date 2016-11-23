@@ -1,7 +1,7 @@
 {
   "name": "flv_to_mp4",
   "version": "1.0.0",
-  "description": "a tool can remux flv to mp4",
+  "description": "A tool can remux flv to mp4 written by Node.js.",
   "main": "index.js",
   "scripts": {
     "build": "babel src -d dist"

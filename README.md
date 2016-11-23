@@ -1,6 +1,6 @@
 # flv_to_mp4
 
-a tool can remux flv to mp4.
+A tool can remux flv to mp4 written by Node.js.
 
 ### Installation
 
